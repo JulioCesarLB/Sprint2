@@ -26,26 +26,23 @@ public class Sprint {
 		} while (combat < 1);
 
 		Object[][] tabela = new Object[teams][combat + 3];
-
-		////////      | n da equipe | combate1 | combate2 | combate3 | notaTotal | notaDesign
-		//            --------------|----------|----------|----------|-----------|------------
-		////////equipe|
+		
+    //////////////| n da equipe | combate1 | combate2 | combate3 | notaTotal | notaDesign
+	//////////////|-------------|----------|----------|----------|-----------|------------
+	////////equipe|
+		
 		int[] score = new int[teams];
 		int[] nota = new int[teams];
 
 		tabela = insertData(combat, teams);
 
-		mostraTabela(tabela, combat, teams);
-
-		tabela = ordenaTabela(tabela, teams, combat);
-
-		mostraTabela(tabela, combat, teams);
+		mostraTabela(ordenaTabela(tabela, teams, combat), combat, teams);
 
 	}
 
 	public static Object[][] insertData(int combat, int teams) {
 		Object[][] tabela = new Object[teams][combat + 3];
-
+		boolean verificacao;
 		for (int i = 0; i < teams; i++) {
 			int notaTotal = 0;
 
@@ -54,14 +51,18 @@ public class Sprint {
 				if (j == 0) {
 					int result;
 					do {
-						result = Integer.parseInt(
-								JOptionPane.showInputDialog(null, "Digite o número da " + (i + 1) + "º equipe"));
+						result = Integer.parseInt(JOptionPane.showInputDialog(null,
+								"Digite o número da " + (i + 1) + "º equipe (11 até 99)"));
+
+						verificacao = verificaNum(result, teams, tabela);
 
 						if (result < 11 || result > 99) {
 							JOptionPane.showMessageDialog(null, "Valor inválido");
+						} else if (verificacao == false) {
+							JOptionPane.showMessageDialog(null, "Número já utilizado");
 						}
 
-					} while (result < 1 || result > 99);
+					} while ((result < 11 || result > 99) || verificacao == false);
 					tabela[i][j] = result;
 
 					///// Insere o resultado dos combates
@@ -115,9 +116,17 @@ public class Sprint {
 	}
 
 	public static void mostraTabela(Object[][] tabela, int combat, int teams) {
+		System.out.print("| n da equipe |");
+		for (int i = 1; i <= combat; i++) {
+			System.out.print("   combate " + i + " |");
+		}
+
+		System.out.print("  notaTotal   |  notaDesign |");
+		System.out.println("");
+
 		for (int i = 0; i < teams; i++) {
 			for (int j = 0; j < combat + 3; j++) {
-				System.out.print(tabela[i][j] + " | ");
+				System.out.print("      " + tabela[i][j] + "      |");
 			}
 			System.out.println("");
 		}
@@ -125,7 +134,7 @@ public class Sprint {
 	}
 
 	public static Object[][] ordenaTabela(Object[][] tabela, int teams, int combat) {
-		
+
 		int index = 0;
 		Object[][] ordenada = new Object[teams][combat + 3];
 
@@ -133,28 +142,40 @@ public class Sprint {
 			int valor = 0;
 			for (int i = 0; i < teams; i++) {
 				if (valor < (int) (tabela[i][(combat + 1)])) {
-					System.out.println(valor);
 					valor = (int) (tabela[i][(combat + 1)]);
 					index = i;
 
-				}else if(valor == (int) (tabela[i][(combat + 1)])) {
-					if((int) tabela[index][combat+2]> (int) (tabela[i][(combat + 2)])){
-						
-					}else if((int) tabela[index][combat+2]< (int) (tabela[i][(combat + 2)])){
+				} else if (valor == (int) (tabela[i][(combat + 1)])) {
+					if ((int) tabela[index][combat + 2] > (int) (tabela[i][(combat + 2)])) {
+
+					} else if ((int) tabela[index][combat + 2] < (int) (tabela[i][(combat + 2)])) {
 						valor = (int) (tabela[i][(combat + 1)]);
-						index =i;
-					}else {
-						
+						index = i;
+					} else {
+
 					}
 				}
 			}
-			
+
 			for (int i = 0; i < combat + 3; i++) {
 				ordenada[j][i] = tabela[index][i];
 			}
 			tabela[index][(combat + 1)] = 0;
 		}
 		return ordenada;
+	}
+
+	public static boolean verificaNum(int result, int teams, Object[][] tabela) {
+		for (int i = 0; i < teams; i++) {
+			if (tabela[i][0] == null) {
+				return true;
+			} else {
+				if (result == (int) tabela[i][0]) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
