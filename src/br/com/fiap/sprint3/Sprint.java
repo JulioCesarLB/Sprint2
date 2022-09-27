@@ -12,6 +12,7 @@ public class Sprint {
 			if (teams < 1) {
 				JOptionPane.showMessageDialog(null, teams + " é menor que o limite (1) \n Tente novamente!!");
 			} else if (teams > 88) {
+		
 				JOptionPane.showMessageDialog(null, teams + " é maior que o limite (88) \n Tente novamente!!");
 			}
 		} while (teams < 1 && teams > 88);
@@ -135,32 +136,41 @@ public class Sprint {
 
 	public static Object[][] ordenaTabela(Object[][] tabela, int teams, int combat) {
 
-		int index = 0;
+		
 		Object[][] ordenada = new Object[teams][combat + 3];
-
+		
 		for (int j = 0; j < teams; j++) {
-			int valor = 0;
+			int valor = 0, index=0;
 			for (int i = 0; i < teams; i++) {
-				if (valor < (int) (tabela[i][(combat + 1)])) {
-					valor = (int) (tabela[i][(combat + 1)]);
-					index = i;
-
-				} else if (valor == (int) (tabela[i][(combat + 1)])) {
-					if ((int) tabela[index][combat + 2] > (int) (tabela[i][(combat + 2)])) {
-
-					} else if ((int) tabela[index][combat + 2] < (int) (tabela[i][(combat + 2)])) {
+				if(tabela[index][(combat + 1)]==null ) {
+					index++;
+				}else if(tabela[i][(combat + 1)]==null) {
+					i++;
+				}else {
+					if (valor < (int) (tabela[i][(combat + 1)])) {
 						valor = (int) (tabela[i][(combat + 1)]);
 						index = i;
-					} else {
-
+	
+					} else if ((valor == (int) (tabela[i][(combat + 1)]))) {
+						
+						if ((int) tabela[index][combat + 2] > (int) (tabela[i][(combat + 2)])) {
+							
+						} else if ((int) tabela[index][combat + 2] < (int) (tabela[i][(combat + 2)])) {
+							valor = (int) (tabela[i][(combat + 1)]);
+							index = i;
+						} else {
+	
+						}
 					}
 				}
+				
 			}
 
 			for (int i = 0; i < combat + 3; i++) {
 				ordenada[j][i] = tabela[index][i];
 			}
-			tabela[index][(combat + 1)] = 0;
+			tabela[index][(combat + 1)] = null;
+			tabela[index][(combat + 2)] = null;
 		}
 		return ordenada;
 	}
